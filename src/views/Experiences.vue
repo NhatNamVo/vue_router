@@ -22,7 +22,9 @@ import store from '@/store.js';
             }
         },
         computed: {
+            // return experience
             destination(){
+                console.log('check error experience')
                 return store.destinations.find(destination => destination.id === this.id);
             },
             experience() {

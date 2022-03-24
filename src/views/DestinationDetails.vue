@@ -31,7 +31,10 @@ import store from '@/store.js';
             }
         },
         computed: {
+            
             destination() {
+                console.log('check error destination');
+                // return list destination
                 return store.destinations.find(destination => destination.id === this.destinationId);
             }
         },
