@@ -1,23 +1,23 @@
 <template>
 <div>
-    <section class="destination" v-if="destination">
+    <section class="destination">
         <h2>{{destination.name}}</h2>
         <div class="destination-details">
             <img :src="require(`@/assets/${destination.image}`)" :alt="destination.name"/>
             <div class="destination-description">{{destination.description}}</div>
         </div>
     </section>
-    <section class="experiences" v-if="destination">
+    <section class="experiences">
         <h2>Top experiences in {{destination.name}}</h2>
         <div class="experience__content">
-            <div v-for="experience in destination.experiences" :key="experience.name" class="card">
-                <router-link :to="{name: 'experienceDetails', params: {experienceSlug: experience.slug}}">
+            <div v-for="experience in destination.experiences" :key="experience.name" class="card" id="experience">
+                <router-link :to="{name: 'experienceDetails', params: {experienceSlug: experience.slug}, hash: '#experience'}">
                     <img :src="require(`@/assets/${experience.image}`)" :alt="experience.name"/>
                     <span class="card__text">{{experience.name}}</span>
                 </router-link>
             </div>
         </div>
-        <router-view :key="$route.path"></router-view>
+            <router-view :key="$route.path"></router-view>
     </section>
 </div>
 </template>
@@ -33,12 +33,18 @@ import store from '@/store.js';
         computed: {
             
             destination() {
-                console.log('check error destination');
-                // return list destination
-                return store.destinations.find(destination => destination.id === this.destinationId);
+                console.log('////////////////////////')
+                return store.destinations.find(destination => {
+                    console.log('item', typeof(destination.id));
+                    console.log('id', typeof(this.destinationId));
+                    return destination.id == this.destinationId;
+                }) || {};
             }
+            
         },
-        
+        mounted() {
+            this.destination;
+        }
     }
 </script>
 

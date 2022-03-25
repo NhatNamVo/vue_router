@@ -13,7 +13,7 @@ import store from '@/store.js';
     export default {
         props: {
             id: {
-                type: Number,
+                type: [Number, String],
                 required: true,
             },
             experienceSlug: {
@@ -24,11 +24,11 @@ import store from '@/store.js';
         computed: {
             // return experience
             destination(){
-                console.log('check error experience')
-                return store.destinations.find(destination => destination.id === this.id);
+                console.log('check error experience');
+                return store.destinations.find(destination => destination.id == this.id) || {};
             },
             experience() {
-                return this.destination.experiences.find(experience => experience.slug === this.experienceSlug);
+                return (this.destination || {}).experiences.find(experience => experience.slug == this.experienceSlug) || {};
             }
         }
     }

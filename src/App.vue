@@ -11,8 +11,14 @@
           {{destination.name}}
         </router-link>
       </template>
+      <router-link :to="{name: 'mytour'}">Tour</router-link>
+      <router-link v-if="!user" :to="{name: 'login'}">login</router-link>
+      <router-link v-if="user" :to="{name: 'user'}">Dashboard</router-link>
+      <a class="btn-logout" @click="logout" v-if="user">logOut</a>
     </div>
-    <router-view :key="$route.path"></router-view>
+    <transition name="slide" mode="out-in" appear>
+      <router-view :key="$route.path"></router-view>
+    </transition>
   </div>
 </template>
 
@@ -24,7 +30,20 @@ export default {
   data() {
     return {
       destinations: store.destinations,
+      user: store.user
     }
+  },
+  methods: {
+    logout() {
+      store.user = null;
+      this.user = store.user;
+      if(this.$route.path !== '/'){
+        this.$router.push('/');
+      }
+    }
+  },
+  updated() {
+    this.user = store.user;
   }
 };
 </script>
@@ -54,5 +73,17 @@ export default {
 }
 #nav a.router-link-exact-active {
   color: #77fc56;
+}
+
+.slide-enter-active, .slide-leave-active{
+  transition: transform 1s;
+  transform-origin: center top;
+}
+.slide-enter, .slide-leave-to {
+  transform-origin: center top;
+  transform: scaleY(0);
+}
+.btn-logout{
+  cursor: pointer;
 }
 </style>
