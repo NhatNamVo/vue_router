@@ -16,7 +16,7 @@
       <router-link v-if="user" :to="{name: 'user'}">Dashboard</router-link>
       <a class="btn-logout" @click="logout" v-if="user">logOut</a>
     </div>
-    <transition name="slide" mode="out-in" appear>
+    <transition :name="transitionName" mode="out-in" appear>
       <router-view :key="$route.path"></router-view>
     </transition>
   </div>
@@ -30,20 +30,40 @@ export default {
   data() {
     return {
       destinations: store.destinations,
-      user: store.user
+      user: (JSON.parse(localStorage.getItem('vue-router'))||{}).user,
+      transitionName: 'slide',
     }
   },
   methods: {
     logout() {
-      store.user = null;
-      this.user = store.user;
+      localStorage.removeItem('vue-router');
+      this.user = null;
       if(this.$route.path !== '/'){
         this.$router.push('/');
       }
     }
   },
-  updated() {
-    this.user = store.user;
+  // updated() {
+  //   const userAccount = JSON.parse(localStorage.getItem('vue-router'));
+  //   if(userAccount) this.user = userAccount.user;
+  // },
+  watch: {
+    // update change Nav router link when login
+    '$route.path': function(newValue, oldValue) {
+      if(oldValue === '/login'){
+        const userAccount = JSON.parse(localStorage.getItem('vue-router'));
+        if(userAccount) this.user = userAccount.user;
+      }
+    },
+    // update transition for router view
+    '$route.meta.transitionName': function(value) {
+      if(value){
+        this.transitionName = value;
+      }
+      else{
+        this.transitionName = 'slide';
+      }
+    }
   }
 };
 </script>
@@ -76,7 +96,7 @@ export default {
 }
 
 .slide-enter-active, .slide-leave-active{
-  transition: transform 1s;
+  transition: transform 0.3s;
   transform-origin: center top;
 }
 .slide-enter, .slide-leave-to {

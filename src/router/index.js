@@ -1,7 +1,9 @@
-import vueRouter from "vue-router";
 import Home from "../views/Home";
-// import DestinationDetails from "../views/DestinationDetails.vue";
 import store from '@/store.js';
+import vueRouter from "vue-router";
+
+// import DestinationDetails from "../views/DestinationDetails.vue";
+
 const routes = [
   {
     path: "/",
@@ -45,6 +47,7 @@ const routes = [
         path: ":experienceSlug",
         name: "experienceDetails",
         component: () => import("../views/Experiences.vue"),
+        meta: {transitionName: 'nonTransition'},
         props: true,
         beforeEnter: (to, from, next) => {
           const destination = store.destinations.find(destination => destination.id == to.params.id);
@@ -94,6 +97,7 @@ const routes = [
   },
 ];
 
+
 const router = new vueRouter({
   mode: "history",
   scrollBehavior(to, from, savedPosition) {
@@ -115,11 +119,12 @@ const router = new vueRouter({
 });
 
 router.beforeEach((to,from, next) => {
-  if(to.name === 'login' && store.user){
+  const userAccount = JSON.parse(localStorage.getItem('vue-router'));
+  if(to.name === 'login' && !!userAccount){
     next({name: 'home'});
   }
   if(to.matched.some(record => record.meta.requiresAuth)) {
-    if(!store.user){
+    if(!userAccount){
       next({
         name: 'login',
         query: {name:  to.name}

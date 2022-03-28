@@ -19,11 +19,16 @@ import store from '@/store.js';
         },
         methods: {
             login() {
-                console.log('store', store.user);
                 if(this.username){
                     store.user = this.username;
+                    localStorage.setItem('vue-router', JSON.stringify({user: this.username}));
                     const redirectName = this.$route.query.name;
-                    this.$router.push({name: redirectName});
+                    if(redirectName){
+                        this.$router.push({name: redirectName});
+                    }
+                    else{
+                        this.$router.push({name: 'user'});
+                    }
                 }
                 else{
                     this.$refs.usernameRef.style.borderColor = "red";

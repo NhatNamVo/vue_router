@@ -35,8 +35,6 @@ import store from '@/store.js';
             destination() {
                 console.log('////////////////////////')
                 return store.destinations.find(destination => {
-                    console.log('item', typeof(destination.id));
-                    console.log('id', typeof(this.destinationId));
                     return destination.id == this.destinationId;
                 }) || {};
             }
